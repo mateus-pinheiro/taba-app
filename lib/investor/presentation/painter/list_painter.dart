@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ListPainter extends CustomPainter {
-  final List<double> positions;
+  final double position;
   final double itemHeight;
   final int index;
 
-  ListPainter(this.positions, this.itemHeight, this.index);
+  ListPainter(this.position, this.itemHeight, this.index);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -15,7 +15,7 @@ class ListPainter extends CustomPainter {
       ..color = Colors.purple;
 
     // Calcular a posição do item
-    final top = positions[index];
+    final top = position;
     final rect = Rect.fromLTRB(0, top, size.width, top + itemHeight);
 
     // Desenhar o retângulo

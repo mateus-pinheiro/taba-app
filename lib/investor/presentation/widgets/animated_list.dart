@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:taba_app/investor/presentation/painter/list_painter.dart';
 
-import 'project_widget.dart';
-
 class AnimatedListTaba extends StatefulWidget {
   const AnimatedListTaba(this.screenHeight, {super.key});
   final double screenHeight;
@@ -17,8 +15,8 @@ class _AnimatedListTabaState extends State<AnimatedListTaba>
   late Ticker _ticker;
   late List<double> _positions;
   final int _itemCount = 20;
-  final double _itemHeight = 200.0;
-  final Duration _animationDuration = const Duration(milliseconds: 800);
+  final double _itemHeight = 300.0;
+  final Duration _animationDuration = const Duration(milliseconds: 700);
   late Duration _totalAnimationDuration;
 
   final List<double> _startTimes = [];
@@ -34,9 +32,9 @@ class _AnimatedListTabaState extends State<AnimatedListTaba>
     // Calcular o tempo total da animação
     int itemsVisibleOnScreen = (widget.screenHeight / _itemHeight).ceil();
     _totalAnimationDuration = Duration(
-      milliseconds: (_animationDuration.inMilliseconds +
-              (itemsVisibleOnScreen - 1) * 400)
-          .round(),
+      milliseconds:
+          (_animationDuration.inMilliseconds + (itemsVisibleOnScreen - 1) * 400)
+              .round(),
     );
 
     // Definir os tempos de início escalonados
@@ -94,10 +92,10 @@ class _AnimatedListTabaState extends State<AnimatedListTaba>
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
-                return CustomPaint(
-                  painter: ListPainter(_positions, _itemHeight, index),
-                  size: const Size(double.infinity, 1),
-                );
+                return CustomListItem(
+                    index: index,
+                    itemHeight: _itemHeight,
+                    position: _positions[index]);
               },
               childCount: _positions.length,
             ),
@@ -111,8 +109,33 @@ class _AnimatedListTabaState extends State<AnimatedListTaba>
     return ListView.builder(
       itemCount: _itemCount,
       itemBuilder: (context, index) {
-        return const ProjectWidget();
+        return CustomListItem(
+          index: index,
+          itemHeight: _itemHeight,
+          position: index * _itemHeight,
+        );
       },
+    );
+  }
+}
+
+class CustomListItem extends StatelessWidget {
+  const CustomListItem({
+    super.key,
+    required this.position,
+    required this.itemHeight,
+    required this.index,
+  });
+
+  final double position; // Posição atual do item (durante animação)
+  final double itemHeight; // Altura do item
+  final int index; // Índice do item na lista
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: ListPainter(position, itemHeight, index),
+      size: const Size(double.infinity, 1),
     );
   }
 }
